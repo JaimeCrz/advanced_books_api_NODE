@@ -16,18 +16,21 @@ after((done) => {
 })
 
 beforeEach(async () => {
+   author = await factory.create('Author', { 
+    id: 10, 
+    firstName: 'Jaime' } );
   await factory.createMany('Book', 2, [
-    { id: 100, title: 'Learning NodeJS for dummies' },
-    { id: 900, title: 'Learning Angular for noobies' }
+    { id: 100, title: 'Learning NodeJS for dummies', AuthorId: author.id },
+    { id: 900, title: 'Learning Angular for noobies', AuthorId: author.id }
   ])
 });
 
-afterEach(() => {
-  factory.cleanUp();
+afterEach( async () => {
+  await factory.cleanUp();
 });
 
 describe('GET /api/v1/books', () => {
-  before(async () => {
+  beforeEach(async () => {
     response = await request.get('/api/v1/books')
   });
 
@@ -38,10 +41,6 @@ describe('GET /api/v1/books', () => {
   it('responds with list of books', () => {
     expect(response.body.books)
       .to.be.an("array")
-  });
-
-  it('returns title for book', () => {
-    expect(response.body.books[1].title).to.equal('Learning Angular for noobies')
   });
 })
 
@@ -59,6 +58,11 @@ describe('GET /api/v1/books/:id', () => {
 
   it('returns title for book', async () => {
     response = await request.get('/api/v1/books/900')
-    expect(response.body.book.authoer.fullName).to.equal('Jamie Cruz')
+    expect(response.body.book.AuthorId).to.equal(10)
+  });
+
+  it('returns title for book', async () => {
+    response = await request.get('/api/v1/books/900')
+    expect(response.body.book.author.firstName).to.equal('Jaime')
   });
 });

@@ -56,4 +56,9 @@ describe('GET /api/v1/books/:id', () => {
     response = await request.get('/api/v1/books/900')
     expect(response.body.book.id).to.equal(900)
   });
+
+  it('returns title for book', async () => {
+    response = await request.get('/api/v1/books/900')
+    expect(response.body.book.authoer.fullName).to.equal('Jamie Cruz')
+  });
 });

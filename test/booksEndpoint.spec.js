@@ -1,8 +1,6 @@
 const app = require('../app')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const jsonResponse = require('./jsonResponse')
-const { factory, Models } = require('../test_helpers')
+const { factory, expect } = require('../test_helpers')
 
 let server, request, response
 
@@ -18,7 +16,8 @@ after((done) => {
 beforeEach(async () => {
    const author = await factory.create('Author', { 
     id: 10, 
-    firstName: 'Jaime' } );
+    firstName: 'Jaime',
+    lastName: 'Cruz' } );
   await factory.createMany('Book', 2, [
     { id: 100, title: 'Learning NodeJS for dummies', AuthorId: author.id },
     { id: 900, title: 'Learning Angular for noobies', AuthorId: author.id }
